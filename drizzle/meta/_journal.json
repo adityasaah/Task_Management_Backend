@@ -8,6 +8,20 @@
       "when": 1773068412456,
       "tag": "0000_right_sway",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773215398977,
+      "tag": "0001_orange_cannonball",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773226472800,
+      "tag": "0002_clumsy_speed_demon",
+      "breakpoints": true
     }
   ]
 }

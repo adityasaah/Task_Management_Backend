@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "unique_title_lower" ON "tasks" USING btree (lower("title"));

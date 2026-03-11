@@ -1,4 +1,13 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export interface Tasks {
@@ -6,6 +15,25 @@ export interface Tasks {
   title: string;
   description: string;
   isCompleted: boolean;
+}
+
+export class GetTasksQueryDto {
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page: number = 1;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(10)
+  pageSize: number = 5;
+
+  @IsOptional()
+  @IsString()
+  title?: string;
 }
 
 export class CreateTasksDto {
@@ -18,6 +46,21 @@ export class CreateTasksDto {
   @IsNotEmpty()
   @Type(() => String)
   description: string;
+
+  @IsNumber()
+  @Min(0)
+  @Type(() => Number)
+  targetProgress: number;
+
+  @IsNumber()
+  @Min(0)
+  @Type(() => Number)
+  currentProgress: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @Type(() => String)
+  metric: string;
 }
 
 export class UpdateTasksDto {
@@ -36,4 +79,22 @@ export class UpdateTasksDto {
   @IsBoolean()
   @IsOptional()
   isCompleted?: boolean;
+
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  @Type(() => Number)
+  targetProgress?: number;
+
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  @Type(() => Number)
+  currentProgress?: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  @Type(() => String)
+  metric?: string;
 }

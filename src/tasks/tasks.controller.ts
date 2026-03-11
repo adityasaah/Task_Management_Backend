@@ -4,14 +4,17 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
   ValidationPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { CreateTasksDto, UpdateTasksDto } from './tasks-types';
+import {
+  CreateTasksDto,
+  GetTasksQueryDto,
+  UpdateTasksDto,
+} from './tasks-types';
 
 @Controller('tasks')
 export class TasksController {
@@ -19,10 +22,15 @@ export class TasksController {
 
   @Get()
   getAll(
-    @Query('page', ParseIntPipe) page: number,
-    @Query('pageSize', ParseIntPipe) pageSize: number,
-    @Query('title') title?: string,
+    @Query(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      }),
+    )
+    getTasksQueryDto: GetTasksQueryDto,
   ) {
+    const { page, pageSize, title } = getTasksQueryDto;
     return this.tasksService.getAll(page, pageSize, title);
   }
 
