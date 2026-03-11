@@ -1,95 +1,56 @@
 import {
   HttpException,
   HttpStatus,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateTasksDto, UpdateTasksDto } from './tasks-types';
-import { DATABASE_CONNECTION } from '../database/database-connection';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import * as schema from './schema';
-import { tasks } from './schema';
-import { DrizzleQueryError, eq } from 'drizzle-orm';
+import { isUniqueViolation, TasksRepository } from './tasks.repository';
 
 @Injectable()
 export class TasksService {
   constructor(
-    @Inject(DATABASE_CONNECTION)
-    private readonly tasks_Database: NodePgDatabase<typeof schema>,
+    // @Inject(DATABASE_CONNECTION)
+    // private readonly tasks_Database: NodePgDatabase<typeof schema>,
+    private readonly tasksRepository: TasksRepository,
   ) {}
 
-  getAll(page: number = 1, pageSize: number = 5, title?: string) {
-    return this.tasks_Database.query.tasks.findMany({
-      where: title
-        ? (tasks, { ilike }) => ilike(tasks.title, `%${title}%`)
-        : undefined,
-      orderBy: (tasks, { asc }) => asc(tasks.createdAt),
-      limit: pageSize,
-      offset: (page - 1) * pageSize,
-    });
+  getAll(page: number, pageSize: number, title?: string) {
+    return this.tasksRepository.findAll(pageSize, page, title);
   }
 
+  private handleTitleDuplicateError(error: unknown): never {
+    if (isUniqueViolation(error)) {
+      throw new HttpException(
+        'Title with same name already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    throw error;
+  }
   async create(createTaskDto: CreateTasksDto) {
     try {
-      let isCompleted = false;
-      if (createTaskDto.currentProgress === createTaskDto.targetProgress) {
-        isCompleted = true;
-      }
-      const [createdTask] = await this.tasks_Database
-        .insert(tasks)
-        .values({ ...createTaskDto, isCompleted })
-        .returning();
-
+      const createdTask = await this.tasksRepository.create(createTaskDto);
       return { message: 'Created Successfully!', createdTask };
     } catch (error) {
-      if (
-        error instanceof DrizzleQueryError &&
-        typeof error.cause === 'object' &&
-        'code' in error.cause &&
-        error.cause.code === '23505'
-      ) {
-        throw new HttpException(
-          'Title with same name already exists',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      // console.log(error.constructor.name);
-      throw error;
+      this.handleTitleDuplicateError(error);
     }
   }
 
-  async update(updateTaskDto: UpdateTasksDto, id: string) {
+  async update(id: string, updateTaskDto: UpdateTasksDto) {
     try {
-      const [updatedTask] = await this.tasks_Database
-        .update(tasks)
-        .set({ ...updateTaskDto })
-        .where(eq(tasks.id, Number(id)))
-        .returning();
-
+      const updatedTask = await this.tasksRepository.update(
+        Number(id),
+        updateTaskDto,
+      );
       return { message: 'Updated Successfully!', updatedTask };
     } catch (error) {
-      if (
-        error instanceof DrizzleQueryError &&
-        typeof error.cause === 'object' &&
-        'code' in error.cause &&
-        error.cause.code === '23505'
-      ) {
-        throw new HttpException(
-          'Title with same name already exists',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      // console.log(error.constructor.name);
-      throw error;
+      return this.handleTitleDuplicateError(error);
     }
   }
 
   async delete(id: string) {
-    const [deletedTask] = await this.tasks_Database
-      .delete(tasks)
-      .where(eq(tasks.id, Number(id)))
-      .returning();
+    const deletedTask = await this.tasksRepository.delete(Number(id));
 
     if (!deletedTask) {
       throw new NotFoundException('Task with given id not found!');

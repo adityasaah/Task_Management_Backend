@@ -9,12 +9,12 @@ import {
   Query,
   ValidationPipe,
 } from '@nestjs/common';
-import { TasksService } from './tasks.service';
 import {
   CreateTasksDto,
   GetTasksQueryDto,
   UpdateTasksDto,
 } from './tasks-types';
+import { TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
@@ -58,7 +58,7 @@ export class TasksController {
     updateTaskDto: UpdateTasksDto,
     @Param('id') id: string,
   ) {
-    return this.tasksService.update(updateTaskDto, id);
+    return this.tasksService.update(id,updateTaskDto);
   }
 
   @Delete(':id')
