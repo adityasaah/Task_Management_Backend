@@ -4,7 +4,11 @@ import { TasksRepository } from './tasks.repository';
 import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { DrizzleQueryError } from 'drizzle-orm';
 
-describe('tasksService', () => {
+// TODO: Rename to use domain language, not class name
+// describe('Task Management', () => {
+describe('tasks service', () => {
+  // TODO: Rename to describe behavior/scenario, not method name
+  // describe('when fetching tasks', () => {
   describe('getAll', () => {
     let mockTasksRepository: { findAll: ReturnType<typeof vi.fn> };
     let service: TasksService;
@@ -19,6 +23,8 @@ describe('tasksService', () => {
       );
     });
 
+    // TODO: Rename to describe user behavior, not implementation details
+    // it('returns paginated tasks when no search filter is provided', async () => {
     it('should return the array of tasks according to provided page and pageSize and title of tasks as undefined', async () => {
       const mockTasks = [
         {
@@ -61,6 +67,8 @@ describe('tasksService', () => {
       expect(result).toBe(mockTasks);
     });
 
+    // TODO: Rename to focus on the search behavior, not the mechanics
+    // it('returns only tasks matching the search criteria', async () => {
     it('should return the array of tasks according to provided page and pageSize and title of tasks', async () => {
       const mockTasks = [
         {
@@ -83,6 +91,8 @@ describe('tasksService', () => {
       expect(result).toBe(mockTasks);
     });
 
+    // TODO: Simplify to describe the business outcome, not the data structure
+    // it('returns empty list when no tasks match the search', async () => {
     it('should return empty array of tasks according to provided page and pageSize and title of tasks which is not found', async () => {
       const mockTasks = [];
 
@@ -95,6 +105,8 @@ describe('tasksService', () => {
     });
   });
 
+  // TODO: Rename to describe behavior/scenario, not method name
+  // describe('when creating a task', () => {
   describe('create', () => {
     let mockTasksRepository: { create: ReturnType<typeof vi.fn> };
     let service: TasksService;
@@ -109,6 +121,8 @@ describe('tasksService', () => {
       );
     });
 
+    // TODO: Focus on the business value, not technical details (insert, JSON)
+    // it('creates a new task successfully', async () => {
     it('should insert task and return createdTask with proper json response', async () => {
       const createTaskDto = {
         title: 'Task A',
@@ -132,6 +146,8 @@ describe('tasksService', () => {
       // Assert
       expect(result).toEqual({ message: 'Created Successfully!', createdTask });
     });
+    // TODO: Use domain language - what business rule is being enforced?
+    // it('prevents creating tasks with duplicate titles', async () => {
     it('should throw HttpException when same title is tried to add', async () => {
       const createTaskDto = {
         title: 'Task A',
@@ -160,6 +176,8 @@ describe('tasksService', () => {
     });
   });
 
+  // TODO: Rename to describe behavior/scenario, not method name
+  // describe('when updating a task', () => {
   describe('update', () => {
     let mockTasksRepository: { update: ReturnType<typeof vi.fn> };
     let service: TasksService;
@@ -174,6 +192,8 @@ describe('tasksService', () => {
       );
     });
 
+    // TODO: Describe what's being updated in domain terms
+    // it('updates task progress and description', async () => {
     it('should update task with partial field and return updatedTask with proper json response', async () => {
       const updateTaskDto = {
         title: 'Task A',
@@ -197,6 +217,8 @@ describe('tasksService', () => {
       // Assert
       expect(result).toEqual({ message: 'Updated Successfully!', updatedTask });
     });
+    // TODO: Focus on the business constraint being enforced
+    // it('prevents updating task to a title that already exists', async () => {
     it('should throw HttpException when same title is tried to add as update', async () => {
       const updateTaskDto = {
         title: 'Task A',
@@ -225,6 +247,8 @@ describe('tasksService', () => {
     });
   });
 
+  // TODO: Rename to describe behavior/scenario using domain language
+  // describe('when removing a task', () => {
   describe('delete', () => {
     let mockTasksRepository: { delete: ReturnType<typeof vi.fn> };
     let service: TasksService;
@@ -237,6 +261,8 @@ describe('tasksService', () => {
       );
     });
 
+    // TODO: Describe the action from the user's perspective
+    // it('removes an existing task permanently', async () => {
     it('should return success message with deleted task', async () => {
       // Arrange
       const deletedTask = {
@@ -256,6 +282,8 @@ describe('tasksService', () => {
       expect(result).toEqual({ message: 'Deleted Successfully!', deletedTask });
     });
 
+    // TODO: Express as a business scenario, not an exception type
+    // it('reports error when attempting to remove non-existent task', async () => {
     it('should throw NotFoundException when task is not found', async () => {
       mockTasksRepository.delete.mockResolvedValue(null);
 
