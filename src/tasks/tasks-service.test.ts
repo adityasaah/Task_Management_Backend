@@ -146,6 +146,7 @@ describe('tasks service', () => {
       // Assert
       expect(result).toEqual({ message: 'Created Successfully!', createdTask });
     });
+
     // TODO: Use domain language - what business rule is being enforced?
     // it('prevents creating tasks with duplicate titles', async () => {
     it('should throw HttpException when same title is tried to add', async () => {
@@ -217,6 +218,7 @@ describe('tasks service', () => {
       // Assert
       expect(result).toEqual({ message: 'Updated Successfully!', updatedTask });
     });
+
     // TODO: Focus on the business constraint being enforced
     // it('prevents updating task to a title that already exists', async () => {
     it('should throw HttpException when same title is tried to add as update', async () => {
@@ -262,7 +264,7 @@ describe('tasks service', () => {
     });
 
     // TODO: Describe the action from the user's perspective
-    // it('removes an existing task permanently', async () => {
+    // it('removes an existing task permanently and return success message', async () => {
     it('should return success message with deleted task', async () => {
       // Arrange
       const deletedTask = {
