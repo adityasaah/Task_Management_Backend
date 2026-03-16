@@ -3,6 +3,8 @@ import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
 
 describe('TasksController', () => {
+  // TODO: controller tests are usually integrations tests
+  // with real DB and no mocks except external dependencies not under our control
   describe('getAll', () => {
     let mockTasksService: { getAll: ReturnType<typeof vi.fn> };
     let controller: TasksController;
@@ -11,6 +13,7 @@ describe('TasksController', () => {
       vi.clearAllMocks();
       mockTasksService = { getAll: vi.fn() };
       controller = new TasksController(
+        // TODO: can use mockDeep<TasksService>() here
         mockTasksService as unknown as TasksService,
       );
     });
