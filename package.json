@@ -13,6 +13,11 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:test:create": "docker-compose exec db-assignment psql -U postgres -c 'CREATE DATABASE tasks_test;'",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:cov": "vitest run --coverage",
@@ -29,7 +34,8 @@
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.1",
     "pg": "^8.20.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "unplugin-swc": "^1.5.9"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

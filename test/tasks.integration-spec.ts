@@ -9,42 +9,28 @@ import { AppModule } from '../src/app.module';
 import * as taskSchema from '../src/tasks/schema';
 import { tasks } from '../src/tasks/schema';
 
-
-
-// type TestDatabase = NodePgDatabase<typeof taskSchema>;
-
 describe('TasksController', () => {
   let app: INestApplication;
-  // let db: TestDatabase;
+  let db: NodePgDatabase<typeof taskSchema>;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule,
-      ],
-    })
-      .compile();
+      imports: [AppModule],
+    }).compile();
 
     app = module.createNestApplication();
     await app.init();
 
-    // db = module.get<TestDatabase>(DATABASE_CONNECTION);
-
-    // const controller = module.get(TasksController);
-    // console.log(controller)
-
-    // console.log(
-//   Reflect.getMetadata('design:paramtypes', TasksController)
-// );
+    db = module.get(DATABASE_CONNECTION);
   });
 
   afterAll(async () => {
     await app.close();
   });
 
-  // beforeEach(async () => {
-  //   await db.delete(tasks);
-  // });
+  beforeEach(async () => {
+    await db.delete(tasks);
+  });
 
   it('returns 200 with empty array when no tasks exist', async () => {
     await request(app.getHttpServer()).get('/tasks').expect(200).expect([]);
