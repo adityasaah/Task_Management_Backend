@@ -4,28 +4,20 @@ import { TasksRepository } from './tasks.repository';
 import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { DrizzleQueryError } from 'drizzle-orm';
 
-// TODO: Rename to use domain language, not class name
-// describe('Task Management', () => {
-describe('tasks service', () => {
-  // TODO: Rename to describe behavior/scenario, not method name
-  // describe('when fetching tasks', () => {
-  describe('getAll', () => {
+describe('Task Management', () => {
+  describe('when fetching tasks', () => {
     let mockTasksRepository: { findAll: ReturnType<typeof vi.fn> };
     let service: TasksService;
 
     beforeEach(() => {
       vi.clearAllMocks();
-      mockTasksRepository = {
-        findAll: vi.fn(),
-      };
+      mockTasksRepository = { findAll: vi.fn() };
       service = new TasksService(
         mockTasksRepository as unknown as TasksRepository,
       );
     });
 
-    // TODO: Rename to describe user behavior, not implementation details
-    // it('returns paginated tasks when no search filter is provided', async () => {
-    it('should return the array of tasks according to provided page and pageSize and title of tasks as undefined', async () => {
+    it('returns paginated tasks when no search filter is provided', async () => {
       const mockTasks = [
         {
           id: 1,
@@ -60,16 +52,13 @@ describe('tasks service', () => {
       ];
 
       mockTasksRepository.findAll.mockResolvedValue(mockTasks);
-
       const result = await service.getAll(1, 3);
 
       expect(mockTasksRepository.findAll).toHaveBeenCalledWith(3, 1, undefined);
       expect(result).toBe(mockTasks);
     });
 
-    // TODO: Rename to focus on the search behavior, not the mechanics
-    // it('returns only tasks matching the search criteria', async () => {
-    it('should return the array of tasks according to provided page and pageSize and title of tasks', async () => {
+    it('returns only tasks matching the search criteria', async () => {
       const mockTasks = [
         {
           id: 1,
@@ -84,46 +73,34 @@ describe('tasks service', () => {
       ];
 
       mockTasksRepository.findAll.mockResolvedValue(mockTasks);
-
       const result = await service.getAll(1, 3, 'Task A');
 
       expect(mockTasksRepository.findAll).toHaveBeenCalledWith(3, 1, 'Task A');
       expect(result).toBe(mockTasks);
     });
 
-    // TODO: Simplify to describe the business outcome, not the data structure
-    // it('returns empty list when no tasks match the search', async () => {
-    it('should return empty array of tasks according to provided page and pageSize and title of tasks which is not found', async () => {
-      const mockTasks = [];
-
-      vi.mocked(mockTasksRepository.findAll)?.mockResolvedValue(mockTasks);
-
+    it('returns empty list when no tasks match the search', async () => {
+      vi.mocked(mockTasksRepository.findAll)?.mockResolvedValue([]);
       const result = await service.getAll(1, 3, 'Task A');
 
       expect(mockTasksRepository.findAll).toHaveBeenCalledWith(3, 1, 'Task A');
-      expect(result).toBe(mockTasks);
+      expect(result).toEqual([]);
     });
   });
 
-  // TODO: Rename to describe behavior/scenario, not method name
-  // describe('when creating a task', () => {
-  describe('create', () => {
+  describe('when creating a task', () => {
     let mockTasksRepository: { create: ReturnType<typeof vi.fn> };
     let service: TasksService;
 
     beforeEach(() => {
       vi.clearAllMocks();
-      mockTasksRepository = {
-        create: vi.fn(),
-      };
+      mockTasksRepository = { create: vi.fn() };
       service = new TasksService(
         mockTasksRepository as unknown as TasksRepository,
       );
     });
 
-    // TODO: Focus on the business value, not technical details (insert, JSON)
-    // it('creates a new task successfully', async () => {
-    it('should insert task and return createdTask with proper json response', async () => {
+    it('creates a new task successfully', async () => {
       const createTaskDto = {
         title: 'Task A',
         isCompleted: false,
@@ -132,24 +109,15 @@ describe('tasks service', () => {
         metric: '%',
         description: 'abc',
       };
-
-      const createdTask = {
-        ...createTaskDto,
-        id: 1,
-        createdAt: new Date(),
-      };
+      const createdTask = { ...createTaskDto, id: 1, createdAt: new Date() };
 
       mockTasksRepository.create.mockResolvedValue(createdTask);
-
       const result = await service.create(createTaskDto);
 
-      // Assert
       expect(result).toEqual({ message: 'Created Successfully!', createdTask });
     });
 
-    // TODO: Use domain language - what business rule is being enforced?
-    // it('prevents creating tasks with duplicate titles', async () => {
-    it('should throw HttpException when same title is tried to add', async () => {
+    it('prevents creating a task when a task with the same title already exists', async () => {
       const createTaskDto = {
         title: 'Task A',
         isCompleted: false,
@@ -163,9 +131,8 @@ describe('tasks service', () => {
         Object.assign(error, { cause: { code: '23505' } });
         return error;
       };
-      const uniqueViolationError = buildUniqueViolationError();
-      mockTasksRepository.create.mockRejectedValue(uniqueViolationError); // 👈 rejected not resolved
 
+      mockTasksRepository.create.mockRejectedValue(buildUniqueViolationError());
       const act = () => service.create(createTaskDto);
 
       await expect(act()).rejects.toThrow(
@@ -177,32 +144,25 @@ describe('tasks service', () => {
     });
   });
 
-  // TODO: Rename to describe behavior/scenario, not method name
-  // describe('when updating a task', () => {
-  describe('update', () => {
+  describe('when updating a task', () => {
     let mockTasksRepository: { update: ReturnType<typeof vi.fn> };
     let service: TasksService;
 
     beforeEach(() => {
       vi.clearAllMocks();
-      mockTasksRepository = {
-        update: vi.fn(),
-      };
+      mockTasksRepository = { update: vi.fn() };
       service = new TasksService(
         mockTasksRepository as unknown as TasksRepository,
       );
     });
 
-    // TODO: Describe what's being updated in domain terms
-    // it('updates task progress and description', async () => {
-    it('should update task with partial field and return updatedTask with proper json response', async () => {
+    it('updates task details and returns the updated task', async () => {
       const updateTaskDto = {
         title: 'Task A',
         currentProgress: 3,
         metric: '%',
         description: 'abc',
       };
-
       const updatedTask = {
         ...updateTaskDto,
         id: 1,
@@ -212,16 +172,12 @@ describe('tasks service', () => {
       };
 
       mockTasksRepository.update.mockResolvedValue(updatedTask);
-
       const result = await service.update('1', updateTaskDto);
 
-      // Assert
       expect(result).toEqual({ message: 'Updated Successfully!', updatedTask });
     });
 
-    // TODO: Focus on the business constraint being enforced
-    // it('prevents updating task to a title that already exists', async () => {
-    it('should throw HttpException when same title is tried to add as update', async () => {
+    it('prevents updating a task to a title that already exists', async () => {
       const updateTaskDto = {
         title: 'Task A',
         isCompleted: false,
@@ -235,9 +191,8 @@ describe('tasks service', () => {
         Object.assign(error, { cause: { code: '23505' } });
         return error;
       };
-      const uniqueViolationError = buildUniqueViolationError();
-      mockTasksRepository.update.mockRejectedValue(uniqueViolationError);
 
+      mockTasksRepository.update.mockRejectedValue(buildUniqueViolationError());
       const act = () => service.update('1', updateTaskDto);
 
       await expect(act()).rejects.toThrow(
@@ -249,9 +204,7 @@ describe('tasks service', () => {
     });
   });
 
-  // TODO: Rename to describe behavior/scenario using domain language
-  // describe('when removing a task', () => {
-  describe('delete', () => {
+  describe('when removing a task', () => {
     let mockTasksRepository: { delete: ReturnType<typeof vi.fn> };
     let service: TasksService;
 
@@ -263,10 +216,7 @@ describe('tasks service', () => {
       );
     });
 
-    // TODO: Describe the action from the user's perspective
-    // it('removes an existing task permanently and return success message', async () => {
-    it('should return success message with deleted task', async () => {
-      // Arrange
+    it('removes an existing task and confirms deletion', async () => {
       const deletedTask = {
         id: 1,
         title: 'Task A',
@@ -278,17 +228,13 @@ describe('tasks service', () => {
         description: 'abc',
       };
       mockTasksRepository.delete.mockResolvedValue(deletedTask);
-
       const result = await service.delete('1');
 
       expect(result).toEqual({ message: 'Deleted Successfully!', deletedTask });
     });
 
-    // TODO: Express as a business scenario, not an exception type
-    // it('reports error when attempting to remove non-existent task', async () => {
-    it('should throw NotFoundException when task is not found', async () => {
+    it('reports an error when attempting to remove a task that does not exist', async () => {
       mockTasksRepository.delete.mockResolvedValue(null);
-
       const act = () => service.delete('1');
 
       await expect(act).rejects.toThrow(
