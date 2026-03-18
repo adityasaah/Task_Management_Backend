@@ -13,11 +13,16 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:test:create": "docker-compose exec db-assignment psql -U postgres -c 'CREATE DATABASE tasks_test;'",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "vitest run"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -26,10 +31,11 @@
     "@nestjs/platform-express": "^11.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
+    "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.1",
     "pg": "^8.20.0",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "unplugin-swc": "^1.5.9"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -49,6 +55,7 @@
     "globals": "^16.0.0",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",
+    "reflect-metadata": "^0.2.2",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",

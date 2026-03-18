@@ -10,12 +10,11 @@ import { isUniqueViolation, TasksRepository } from './tasks.repository';
 @Injectable()
 export class TasksService {
   constructor(
-    // @Inject(DATABASE_CONNECTION)
-    // private readonly tasks_Database: NodePgDatabase<typeof schema>,
     private readonly tasksRepository: TasksRepository,
   ) {}
 
   getAll(page: number, pageSize: number, title?: string) {
+    // return [];
     return this.tasksRepository.findAll(pageSize, page, title);
   }
 

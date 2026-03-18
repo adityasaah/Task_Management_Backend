@@ -1,1 +1,1 @@
-export const DATABASE_CONNECTION = 'database_connection_drizzle';
+export const DATABASE_CONNECTION = 'DATABASE_CONNECTION';
