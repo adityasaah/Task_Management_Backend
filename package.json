@@ -17,12 +17,13 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:test:create": "docker-compose exec db-assignment psql -U postgres -c 'CREATE DATABASE tasks_test;'",
+    "db:test:create": "docker-compose exec db  psql -U postgres -c \"CREATE DATABASE tasks_test;\"",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk",
-    "test:e2e": "vitest run"
+    "test:e2e": "vitest run",
+    "test:integration" : "vitest --config vitest.integration.config.ts .\test\tasks-controller.integration-spec.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

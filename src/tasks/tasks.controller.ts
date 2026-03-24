@@ -31,8 +31,6 @@ export class TasksController {
     getTasksQueryDto: GetTasksQueryDto,
   ) {
     const { page, pageSize, title } = getTasksQueryDto;
-    // return [];
-    // console.log(this.tasksService);
     return this.tasksService.getAll(page, pageSize, title);
   }
 
