@@ -23,6 +23,8 @@
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk",
     "test:e2e": "vitest run",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint:read": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "test:integration" : "vitest --config vitest.integration.config.ts .\test\tasks-controller.integration-spec.ts"
   },
   "dependencies": {
