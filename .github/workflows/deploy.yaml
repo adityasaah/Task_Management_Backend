@@ -114,7 +114,7 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Deploy to Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway up --service  believable-youthfulness
+     - name: Deploy to Railway
+       env:
+       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+       run: npx @railway/cli up --project ec0b9717-eb6a-4b29-9638-0960dd3e879d --service f43cea41-c370-47c6-9673-b6bb28de7d4a
